@@ -84,7 +84,28 @@ func TestPeek(t *testing.T) {
 }
 
 func TestNormalize(t *testing.T) {
+	testData := [][]bool{
+		[]bool{true, true, true, true},
+		[]bool{false, false, false, false},
+		[]bool{false, true, false, true},
+		[]bool{false, false, false, true},
+	}
 
+	for _, in := range testData {
+		s := Stack{}
+		s.Add(in...)
+		_ = s.Normalize()
+		outStr := s.String()
+		if len(outStr) != len(in) {
+			t.Errorf("expected %d length output, got %d\n", len(in), len(outStr))
+		}
+		for _, val := range outStr {
+			if val != '+' {
+				t.Errorf("failed normalization %s", outStr)
+				break
+			}
+		}
+	}
 }
 
 func TestString(t *testing.T) {

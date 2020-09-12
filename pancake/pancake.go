@@ -35,8 +35,10 @@ func (s Stack) Peek(i int) (faceUp bool, ok bool) {
 
 // Normalize performs the necessary operations to
 // make sure every pancake in the stack is face up.
-func (s Stack) Normalize() {
-
+// Returns the number of flip operations performed
+// in the course of doing this.
+func (s Stack) Normalize() int {
+	return -1
 }
 
 // String returns a stringified version of the

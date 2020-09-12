@@ -6,11 +6,31 @@ import (
 	"uhop/pancake"
 	"os"
 	"bufio"
+	"strconv"
 )
 
 func main() {
-	caseCount := 1
 	scanner := bufio.NewScanner(os.Stdin)
+
+	if ok := scanner.Scan(); !ok {
+		fmt.Printf("error while reading number of input lines\n")
+		return
+	}
+
+	rawInput := scanner.Text()
+	lines, err := strconv.Atoi(rawInput)
+	if err != nil {
+		fmt.Printf("didn't understand \"%s\" as the number of input lines\n", rawInput)
+		return
+	}
+
+	// reject out-of-range values for the number of input lines
+	if lines < 1 || lines > 100 {
+		fmt.Printf("invalid number of input lines specified: %d\n", lines)
+		return
+	}
+
+	caseCount := 1
 	for scanner.Scan() {
 		in := scanner.Text()
 		if in == "" {
@@ -32,6 +52,14 @@ func main() {
 		}
 		fmt.Printf("Case #%d: %d\n", caseCount, ops)
 		caseCount++
+
+		// stop if we've read 'lines' number of inputs; the
+		// specification doesn't say what to do in this case,
+		// but it doesn't seem to make sense to have the file
+		// specify a limit and for us to then ignore it
+		if caseCount > lines {
+			break
+		}
 	}
 
 	if err := scanner.Err(); err != nil {

@@ -7,20 +7,37 @@ type Stack struct {
 // Add appends new pancakes to the stack, with
 // each boolean argument specifying whether the
 // pancake is face up.
-func (s Stack) Add(faceUp ...bool) {
-
+func (s *Stack) Add(faceUp ...bool) {
+	s.list = append(s.list, faceUp...)
 }
 
 // Flip flips over the stack from the top to the
-// pancake at position i.
-// If the i parameter is beyond the extents of the
+// pancake at position pos.
+// If the pos parameter is beyond the extents of the
 // stack, then false is returned.
-func (s Stack) Flip(i int) (ok bool) {
-	return false
+func (s *Stack) Flip(pos int) (ok bool) {
+	if pos < 0 || pos >= len(s.list) {
+		return false
+	}
+
+	buf := make([]bool, pos+1)
+
+	// copy out the existing values
+	for i := 0; i < pos+1; i++ {
+		buf[i] = s.list[i]
+	}
+
+	// put the values back, but reversed and
+	// NOT'd
+	for i := 0; i < pos+1; i++ {
+		s.list[i] = !buf[pos-i]
+	}
+
+	return true
 }
 
 // Len returns the number of pancakes in the stack.
-func (s Stack) Len() int {
+func (s *Stack) Len() int {
 	return len(s.list)
 }
 
@@ -29,15 +46,18 @@ func (s Stack) Len() int {
 // parameter is beyond the current extents of the
 // stack, then false will be returned in the second
 // return value.
-func (s Stack) Peek(i int) (faceUp bool, ok bool) {
-	return false, false
+func (s *Stack) Peek(i int) (faceUp bool, ok bool) {
+	if i < 0 || i >= len(s.list) {
+		return false, false
+	}
+	return s.list[i], true
 }
 
 // Normalize performs the necessary operations to
 // make sure every pancake in the stack is face up.
 // Returns the number of flip operations performed
 // in the course of doing this.
-func (s Stack) Normalize() int {
+func (s *Stack) Normalize() int {
 	return -1
 }
 
@@ -45,7 +65,7 @@ func (s Stack) Normalize() int {
 // entire pancake stack, with face up pancakes
 // represented by + and face down by -. The
 // left-most value is the top of the stack.
-func (s Stack) String() string {
+func (s *Stack) String() string {
 	buf := make([]byte, len(s.list))
 	for i, val := range s.list {
 		if val {

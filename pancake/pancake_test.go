@@ -16,13 +16,15 @@ func TestAdd(t *testing.T) {
 		if !ok {
 			t.Errorf("failed to read value at position %d\n", i)
 		}
-		if in[i] == val {
-			t.Fatalf("incorrect values in list: %v\n", outVal)
+		if in[i] != val {
+			t.Fatalf("incorrect value at position %d: wanted %v, got %v\n", i, in[i], outVal)
 		}
 	}
 }
 
 func TestFlip(t *testing.T) {
+	// TODO test range checking
+
 	testData := []struct {
 		in []bool
 		pos int

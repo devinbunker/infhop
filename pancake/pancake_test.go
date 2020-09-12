@@ -23,7 +23,26 @@ func TestAdd(t *testing.T) {
 }
 
 func TestFlip(t *testing.T) {
+	testData := []struct {
+		in []bool
+		pos int
+		expect string
+	}{
+		{[]bool{true, true, false}, 2, "+--"},
+		{[]bool{true, true, false}, 1, "---"},
+		{[]bool{true, true, false}, 0, "-+-"},
+	}
 
+	for _, data := range testData {
+		s := Stack{}
+		s.Add(data.in...)
+		s.Flip(data.pos)
+		outStr := s.String()
+		if outStr != data.expect {
+			t.Errorf("wanted %s, got %s\n", data.expect, outStr)
+		}
+
+	}
 }
 
 func TestLen(t *testing.T) {

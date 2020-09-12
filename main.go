@@ -4,20 +4,19 @@ import (
 	"fmt"
 	"errors"
 	"uhop/pancake"
+	"os"
+	"bufio"
 )
 
 func main() {
-	fmt.Println("starting")
+	caseCount := 1
+	scanner := bufio.NewScanner(os.Stdin)
+	for scanner.Scan() {
+		in := scanner.Text()
+		if in == "" {
+			continue
+		}
 
-	testData := []string{
-		"-",
-		"-+",
-		"+-",
-		"+++",
-		"--+-",
-	}
-
-	for i, in := range testData {
 		inList, err := parseInput(in)
 		if err != nil {
 			fmt.Printf("failed to parse input: %s\n", err.Error())
@@ -31,7 +30,12 @@ func main() {
 			fmt.Printf("failed to normalize pancake stack\n")
 			return
 		}
-		fmt.Printf("Case #%d: %d\n", i, ops)
+		fmt.Printf("Case #%d: %d\n", caseCount, ops)
+		caseCount++
+	}
+
+	if err := scanner.Err(); err != nil {
+		fmt.Printf("error while scanning input: %s\n", err.Error())
 	}
 }
 

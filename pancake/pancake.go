@@ -57,8 +57,40 @@ func (s *Stack) Peek(i int) (faceUp bool, ok bool) {
 // make sure every pancake in the stack is face up.
 // Returns the number of flip operations performed
 // in the course of doing this.
-func (s *Stack) Normalize() int {
-	return -1
+func (s *Stack) Normalize() (ops int, ok bool) {
+	ops = 0
+
+	// start from the bottom of the stack and
+	// work our way up
+	for i := len(s.list)-1; i >= 0; i-- {
+		// is it already face up? then skip
+		val, ok := s.Peek(i)
+		if !ok {
+			return ops, false
+		}
+		if val {
+			continue
+		}
+
+		// we need to flip, so let's first
+		// make sure the top is face down
+		// so it will be face up after the
+		// flip
+		top, ok := s.Peek(0)
+		if !ok {
+			return ops, false
+		}
+		if top {
+			s.Flip(0)
+			ops++
+		}
+
+		// do the flip!
+		s.Flip(i)
+		ops++
+	}
+
+	return ops, true
 }
 
 // String returns a stringified version of the

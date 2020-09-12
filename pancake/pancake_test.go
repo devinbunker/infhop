@@ -23,7 +23,15 @@ func TestAdd(t *testing.T) {
 }
 
 func TestFlip(t *testing.T) {
-	// TODO test range checking
+	s := Stack{}
+	ok := s.Flip(0)
+	if ok {
+		t.Fatalf("successfully flipped an empty stack\n")
+	}
+	ok = s.Flip(1)
+	if ok {
+		t.Fatalf("flipped past the end of a stack\n")
+	}
 
 	testData := []struct {
 		in []bool
@@ -96,7 +104,10 @@ func TestNormalize(t *testing.T) {
 	for _, in := range testData {
 		s := Stack{}
 		s.Add(in...)
-		_ = s.Normalize()
+		_, ok := s.Normalize()
+		if !ok {
+			t.Fatalf("failed while flipping\n")
+		}
 		outStr := s.String()
 		if len(outStr) != len(in) {
 			t.Errorf("expected %d length output, got %d\n", len(in), len(outStr))

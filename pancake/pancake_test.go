@@ -5,7 +5,7 @@ import (
 )
 
 func TestAdd(t *testing.T) {
-	in := []bool{false, true, false}
+	in := []Pancake{{false}, {true}, {false}}
 	s := Stack{}
 	s.Add(in...)
 	if s.Len() != len(in) {
@@ -34,13 +34,13 @@ func TestFlip(t *testing.T) {
 	}
 
 	testData := []struct {
-		in []bool
-		pos int
+		in     []Pancake
+		pos    int
 		expect string
 	}{
-		{[]bool{true, true, false}, 2, "+--"},
-		{[]bool{true, true, false}, 1, "---"},
-		{[]bool{true, true, false}, 0, "-+-"},
+		{[]Pancake{{true}, {true}, {false}}, 2, "+--"},
+		{[]Pancake{{true}, {true}, {false}}, 1, "---"},
+		{[]Pancake{{true}, {true}, {false}}, 0, "-+-"},
 	}
 
 	for _, data := range testData {
@@ -56,7 +56,7 @@ func TestFlip(t *testing.T) {
 }
 
 func TestLen(t *testing.T) {
-	in := []bool{false, true, false}
+	in := []Pancake{{false}, {true}, {false}}
 	s := Stack{}
 	s.Add(in...)
 	if s.Len() != len(in) {
@@ -65,7 +65,7 @@ func TestLen(t *testing.T) {
 }
 
 func TestPeek(t *testing.T) {
-	in := []bool{false, true, false}
+	in := []Pancake{{false}, {true}, {false}}
 	s := Stack{}
 	s.Add(in...)
 
@@ -94,11 +94,11 @@ func TestPeek(t *testing.T) {
 }
 
 func TestNormalize(t *testing.T) {
-	testData := [][]bool{
-		[]bool{true, true, true, true},
-		[]bool{false, false, false, false},
-		[]bool{false, true, false, true},
-		[]bool{false, false, false, true},
+	testData := [][]Pancake{
+		[]Pancake{{true}, {true}, {true}, {true}},
+		[]Pancake{{false}, {false}, {false}, {false}},
+		[]Pancake{{false}, {true}, {false}, {true}},
+		[]Pancake{{false}, {false}, {false}, {true}},
 	}
 
 	for _, in := range testData {
@@ -122,7 +122,7 @@ func TestNormalize(t *testing.T) {
 }
 
 func TestString(t *testing.T) {
-	in := []bool{false, true, false}
+	in := []Pancake{{false}, {true}, {false}}
 	expectStr := "-+-"
 	s := Stack{}
 	s.Add(in...)
@@ -132,4 +132,3 @@ func TestString(t *testing.T) {
 		t.Fatalf("wanted %s, got %s\n", expectStr, str)
 	}
 }
-

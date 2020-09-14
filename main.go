@@ -70,19 +70,19 @@ func main() {
 	}
 }
 
-func parseInput(in string) (out []bool, err error) {
+func parseInput(in string) (out []pancake.Pancake, err error) {
 	// preallocate enough space to fit the entire input.
 	// we can't rely solely on the input string length,
 	// since there could be multi-byte characters that
 	// would throw things off
-	out = make([]bool, 0, len(in))
+	out = make([]pancake.Pancake, 0, len(in))
 
 	limit := stackLimit
 	for _, val := range in {
 		if val == '+' {
-			out = append(out, true)
+			out = append(out, pancake.Pancake{true})
 		} else if val == '-' {
-			out = append(out, false)
+			out = append(out, pancake.Pancake{false})
 		} else {
 			return out, errors.New(fmt.Sprintf("invalid character: %s", val))
 		}

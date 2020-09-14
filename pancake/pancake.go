@@ -1,14 +1,16 @@
 package pancake
 
-type Stack struct {
-	list []bool
+type Pancake struct {
+	FaceUp bool
 }
 
-// Add appends new pancakes to the stack, with
-// each boolean argument specifying whether the
-// pancake is face up.
-func (s *Stack) Add(faceUp ...bool) {
-	s.list = append(s.list, faceUp...)
+type Stack struct {
+	list []Pancake
+}
+
+// Add appends new pancakes to the stack.
+func (s *Stack) Add(p ...Pancake) {
+	s.list = append(s.list, p...)
 }
 
 // Flip flips over the stack from the top to the
@@ -20,17 +22,21 @@ func (s *Stack) Flip(pos int) (ok bool) {
 		return false
 	}
 
-	buf := make([]bool, pos+1)
+	// create a temporary list of pancakes to
+	// hold the old values, sized to contain
+	// just the substack we're interested in
+	buf := make([]Pancake, pos+1)
 
 	// copy out the existing values
 	for i := 0; i < pos+1; i++ {
 		buf[i] = s.list[i]
 	}
 
-	// put the values back, but reversed and
-	// NOT'd
+	// put the values back, but in reverse order
+	// and flipped
 	for i := 0; i < pos+1; i++ {
-		s.list[i] = !buf[pos-i]
+		buf[pos-i].FaceUp = !buf[pos-i].FaceUp
+		s.list[i] = buf[pos-i]
 	}
 
 	return true
@@ -46,9 +52,9 @@ func (s *Stack) Len() int {
 // parameter is beyond the current extents of the
 // stack, then false will be returned in the second
 // return value.
-func (s *Stack) Peek(i int) (faceUp bool, ok bool) {
+func (s *Stack) Peek(i int) (p Pancake, ok bool) {
 	if i < 0 || i >= len(s.list) {
-		return false, false
+		return Pancake{}, false
 	}
 	return s.list[i], true
 }
@@ -62,13 +68,13 @@ func (s *Stack) Normalize() (ops int, ok bool) {
 
 	// start from the bottom of the stack and
 	// work our way up
-	for i := len(s.list)-1; i >= 0; i-- {
+	for i := len(s.list) - 1; i >= 0; i-- {
 		// is it already face up? then skip
-		val, ok := s.Peek(i)
+		p, ok := s.Peek(i)
 		if !ok {
 			return ops, false
 		}
-		if val {
+		if p.FaceUp {
 			continue
 		}
 
@@ -80,7 +86,7 @@ func (s *Stack) Normalize() (ops int, ok bool) {
 		if !ok {
 			return ops, false
 		}
-		if top {
+		if top.FaceUp {
 			s.Flip(0)
 			ops++
 		}
@@ -99,8 +105,8 @@ func (s *Stack) Normalize() (ops int, ok bool) {
 // left-most value is the top of the stack.
 func (s *Stack) String() string {
 	buf := make([]byte, len(s.list))
-	for i, val := range s.list {
-		if val {
+	for i, p := range s.list {
+		if p.FaceUp {
 			buf[i] = '+'
 		} else {
 			buf[i] = '-'

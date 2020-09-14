@@ -1,13 +1,16 @@
 package main
 
 import (
-	"fmt"
-	"errors"
-	"uhop/pancake"
-	"os"
 	"bufio"
+	"errors"
+	"fmt"
+	"os"
 	"strconv"
+	"uhop/pancake"
 )
+
+const stackLimit = 100
+const lineLimit = 100
 
 func main() {
 	scanner := bufio.NewScanner(os.Stdin)
@@ -25,7 +28,7 @@ func main() {
 	}
 
 	// reject out-of-range values for the number of input lines
-	if lines < 1 || lines > 100 {
+	if lines < 1 || lines > lineLimit {
 		fmt.Printf("invalid number of input lines specified: %d\n", lines)
 		return
 	}
@@ -68,9 +71,13 @@ func main() {
 }
 
 func parseInput(in string) (out []bool, err error) {
-	// preallocate enough space to fit the entire input
+	// preallocate enough space to fit the entire input.
+	// we can't rely solely on the input string length,
+	// since there could be multi-byte characters that
+	// would throw things off
 	out = make([]bool, 0, len(in))
 
+	limit := stackLimit
 	for _, val := range in {
 		if val == '+' {
 			out = append(out, true)
@@ -79,8 +86,11 @@ func parseInput(in string) (out []bool, err error) {
 		} else {
 			return out, errors.New(fmt.Sprintf("invalid character: %s", val))
 		}
+		limit--
+		if limit < 0 {
+			return out, errors.New(fmt.Sprintf("exceeded stack limit of %d\n", stackLimit))
+		}
 	}
 
 	return out, nil
 }
-

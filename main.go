@@ -4,9 +4,9 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
+	"infhop/pancake"
 	"os"
 	"strconv"
-	"uhop/pancake"
 )
 
 const stackLimit = 100

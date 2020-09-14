@@ -84,7 +84,7 @@ func parseInput(in string) (out []pancake.Pancake, err error) {
 		} else if val == '-' {
 			out = append(out, pancake.Pancake{false})
 		} else {
-			return out, errors.New(fmt.Sprintf("invalid character: %s", val))
+			return out, errors.New(fmt.Sprintf("invalid character: %c", val))
 		}
 		limit--
 		if limit < 0 {
